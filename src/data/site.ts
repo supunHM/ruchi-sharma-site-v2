@@ -12,6 +12,9 @@ export const site = {
   tagline: 'Brand storytelling that builds emotional connections in a human-centric world.',
   description:
     'Ruchi Sharma is an awarded Writer and Creative Director adept at brand storytelling that builds emotional connections in a human-centric world. Founder & CCO of HumanSense, Colombo.',
+  /** ≤160 characters, used for the home page meta description. */
+  metaDescription:
+    'Ruchi Sharma is an awarded Writer and Creative Director specialising in human-centric brand storytelling. Founder & CCO of HumanSense, Colombo.',
   email: 'ruchigucci@gmail.com',
   phone: '+94 766 444 428',
   phoneHref: '+94766444428',

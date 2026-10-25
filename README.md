@@ -28,3 +28,19 @@ Or direct upload: `npm run build && npx wrangler pages deploy dist`.
 - "Thirty years" resume heading is derived from the 1995 start date.
 - Email/phone are published as on the current site.
 - Case-study links on /work/ point to the existing site's /portfolio/ pages.
+
+## Production notes (Cloudflare)
+
+- **Node:** set `NODE_VERSION=22.23.4` in Pages → Settings → Environment variables (build: `npm run build`, output: `dist`).
+- **Canonical host:** the site declares `https://ruchisharma.com` (apex). Add a Cloudflare *Redirect Rule* (Rules → Redirect Rules): hostname equals `www.ruchisharma.com` → dynamic `concat("https://ruchisharma.com", http.request.uri.path)`, 301, preserve query string. Pages `_redirects` cannot match hosts.
+- **HTTPS:** SSL/TLS → Edge Certificates → enable *Always Use HTTPS*; HSTS is already sent via `public/_headers`.
+- **Compression:** Brotli/gzip are applied automatically by Cloudflare. No config needed.
+- **Caching:** `/_astro/*` and `/fonts/*` are immutable (1 year). HTML is `max-age=0, must-revalidate`, so deploys show immediately and are never cached indefinitely.
+- **Early Hints:** the `Link` headers in `_headers` let Cloudflare send font preloads early.
+- **Contact form:** set `RESEND_API_KEY`, `CONTACT_FROM`, `CONTACT_TO` as Pages secrets. Without them the form falls back to `mailto:`.
+
+## Performance architecture
+
+- Critical JS is `src/lib/core.ts` (~2.3 KB gzip: theme, menu, form). GSAP/ScrollTrigger/SplitText live in `src/lib/anim.ts` and load lazily on first interaction or idle.
+- The hero intro is pure CSS, so the LCP image never waits on JavaScript. A 5 s failsafe reveals all content if the animation chunk fails.
+- Fonts are self-hosted Latin-only WOFF2 in `public/fonts/` (two preloaded).

@@ -1,31 +1,50 @@
 ---
-import '@fontsource-variable/big-shoulders-display/wght';
-import '@fontsource/poppins/300.css';
-import '@fontsource/poppins/400.css';
-import '@fontsource/poppins/500.css';
 import '../styles/global.css';
 import Header from '../components/layout/Header.astro';
 import Footer from '../components/layout/Footer.astro';
-import { site } from '../data/site';
+import { site, skills } from '../data/site';
 
+interface Crumb {
+  name: string;
+  path: string;
+}
 interface Props {
   title: string;
+  /** Full <title>; defaults to "<title> — Ruchi Sharma". Keep under ~60 characters. */
+  seoTitle?: string;
   description?: string;
   image?: string;
   path?: string;
-  jsonLd?: Record<string, unknown>[];
-  noFooter?: boolean;
+  /** schema.org WebPage subtype for this route. */
+  pageType?: 'WebPage' | 'ProfilePage' | 'ContactPage' | 'CollectionPage' | 'AboutPage';
+  noindex?: boolean;
 }
 
-const { title, description = site.description, image = '/og.jpg', path, jsonLd = [] } = Astro.props;
+const {
+  title,
+  seoTitle,
+  description = site.metaDescription,
+  image = '/og.jpg',
+  path,
+  pageType = 'WebPage',
+  noindex = false,
+} = Astro.props;
+
 const pathname = path ?? Astro.url.pathname;
 const canonical = new URL(pathname, site.url).href;
 const ogImage = new URL(image, site.url).href;
-const fullTitle = title === site.name ? `${site.name} — Writer, Creative Director, Speaker, Mentor` : `${title} — ${site.name}`;
+const isHome = pathname === '/';
+const fullTitle =
+  seoTitle ?? (title === site.name ? `${site.name} — Writer, Creative Director, Speaker, Mentor` : `${title} — ${site.name}`);
 
+const personId = `${site.url}/#person`;
+const websiteId = `${site.url}/#website`;
+const pageId = `${canonical}#webpage`;
+
+// Verified facts only (all sourced from ruchisharma.com).
 const person = {
-  '@context': 'https://schema.org',
   '@type': 'Person',
+  '@id': personId,
   name: site.name,
   url: site.url,
   jobTitle: 'Writer and Creative Director',
@@ -34,8 +53,44 @@ const person = {
   telephone: site.phone,
   image: new URL('/og.jpg', site.url).href,
   sameAs: site.socials.map((s) => s.href),
-  worksFor: { '@type': 'Organization', name: 'HumanSense', location: 'Colombo, Sri Lanka' },
+  knowsAbout: skills,
+  worksFor: { '@type': 'Organization', name: 'HumanSense', address: { '@type': 'PostalAddress', addressLocality: 'Colombo', addressCountry: 'LK' } },
 };
+const website = {
+  '@type': 'WebSite',
+  '@id': websiteId,
+  url: site.url,
+  name: site.name,
+  inLanguage: 'en',
+  publisher: { '@id': personId },
+};
+const webpage = {
+  '@type': pageType,
+  '@id': pageId,
+  url: canonical,
+  name: fullTitle,
+  description,
+  inLanguage: 'en',
+  isPartOf: { '@id': websiteId },
+  about: { '@id': personId },
+  primaryImageOfPage: { '@type': 'ImageObject', url: ogImage, width: 1200, height: 630 },
+  ...(pageType === 'ProfilePage' ? { mainEntity: { '@id': personId } } : {}),
+  ...(isHome ? {} : { breadcrumb: { '@id': `${canonical}#breadcrumb` } }),
+};
+const crumbs: Crumb[] = isHome ? [] : [{ name: 'Home', path: '/' }, { name: title, path: pathname }];
+const breadcrumb = crumbs.length
+  ? {
+      '@type': 'BreadcrumbList',
+      '@id': `${canonical}#breadcrumb`,
+      itemListElement: crumbs.map((c, i) => ({
+        '@type': 'ListItem',
+        position: i + 1,
+        name: c.name,
+        item: new URL(c.path, site.url).href,
+      })),
+    }
+  : null;
+const graph = { '@context': 'https://schema.org', '@graph': [person, website, webpage, ...(breadcrumb ? [breadcrumb] : [])] };
 ---
 
 <!doctype html>
@@ -45,11 +100,14 @@ const person = {
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{fullTitle}</title>
     <meta name="description" content={description} />
+    <meta name="robots" content={noindex ? 'noindex, follow' : 'index, follow, max-image-preview:large, max-snippet:-1'} />
     <link rel="canonical" href={canonical} />
+    <link rel="sitemap" href="/sitemap-index.xml" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <meta name="theme-color" content="#0a0a0a" />
 
-    <meta property="og:type" content="website" />
+    <meta property="og:type" content={isHome ? 'website' : 'article'} />
+    <meta property="og:locale" content="en_US" />
     <meta property="og:site_name" content={site.name} />
     <meta property="og:title" content={fullTitle} />
     <meta property="og:description" content={description} />
@@ -59,6 +117,13 @@ const person = {
     <meta property="og:image:height" content="630" />
     <meta property="og:image:alt" content="Ruchi Sharma, Writer and Creative Director" />
     <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={fullTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+
+    <!-- Only the two fonts the first screen needs are preloaded (body 500/other weights swap in). -->
+    <link rel="preload" href="/fonts/big-shoulders-display-latin.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/poppins-latin-300.woff2" as="font" type="font/woff2" crossorigin />
 
     <!-- Theme + JS flag set before first paint to avoid flashes. -->
     <script is:inline>
@@ -69,14 +134,19 @@ const person = {
           var t = localStorage.getItem('theme');
           if (t === 'light' || t === 'dark') d.setAttribute('data-theme', t);
         } catch (e) {}
-        // Failsafe: if the motion bundle never boots, reveal everything.
+        // Failsafe: if the animation layer never boots, reveal everything.
         window.__motionFailsafe = setTimeout(function () {
           d.classList.add('no-anim');
-        }, 4500);
+        }, 5000);
       })();
     </script>
 
-    {[person, ...jsonLd].map((o) => <script type="application/ld+json" set:html={JSON.stringify(o)} />)}
+    <script type="application/ld+json" set:html={JSON.stringify(graph)} />
+    <!-- Chromium: fetch likely next pages on hover/pointer-down so navigation feels instant. -->
+    <script
+      type="speculationrules"
+      set:html={JSON.stringify({ prefetch: [{ where: { href_matches: '/*' }, eagerness: 'moderate' }] })}
+    />
   </head>
   <body>
     <a class="skip-link" href="#main">Skip to content</a>
@@ -84,9 +154,9 @@ const person = {
     <main id="main">
       <slot />
     </main>
-    {!Astro.props.noFooter && <Footer />}
+    <Footer />
     <script>
-      import '../lib/motion';
+      import '../lib/core';
     </script>
   </body>
 </html>

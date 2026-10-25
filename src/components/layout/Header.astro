@@ -63,8 +63,10 @@ const desktop = nav.filter((n) => n.href !== '/');
               href={n.href}
               aria-current={isCurrent(n.href) ? 'page' : undefined}
             >
-              <sup>0{i + 1}</sup>
-              {n.label}
+              <span class="menu__in" style={`--i:${i}`}>
+                <sup>0{i + 1}</sup>
+                {n.label}
+              </span>
             </a>
           </li>
         ))

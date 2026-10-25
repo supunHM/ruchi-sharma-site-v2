@@ -10,13 +10,15 @@ import portrait from '../assets/images/hero-portrait.jpg';
 
 <Base
   title="About"
+  seoTitle="About Ruchi Sharma — Awarded Writer & Creative Director"
+  pageType="ProfilePage"
   path="/about/"
-  description="Ruchi Sharma is an awarded Writer and Creative Director whose leadership across the world's largest agency networks has grown brands in New York, Bangkok, Southeast Asia, India and Sri Lanka."
+  description="Awarded Writer and Creative Director Ruchi Sharma has grown brands in New York, Bangkok, Southeast Asia, India and Sri Lanka."
 >
   <header class="page-head">
     <div class="wrap">
       <p class="eyebrow">About</p>
-      <h1 data-split>Human<br />first</h1>
+      <h1 class="rise"><span><b style="--i:0">Human</b></span>{' '}<span><b style="--i:1">first</b></span></h1>
     </div>
   </header>
 
@@ -102,7 +104,7 @@ import portrait from '../assets/images/hero-portrait.jpg';
                 <span class="index__num">{String(i + 1).padStart(2, '0')}</span>
                 <span class="index__name" style="font-size:clamp(1.6rem,3.6vw,3.6rem)">
                   {p.title}
-                  <small style="display:block;margin-top:6px;font:500 .72rem/1 var(--font-body);letter-spacing:.2em;opacity:.7">{p.source}</small>
+                  <small style="display:block;margin-top:6px;font:500 .75rem/1 var(--font-body);letter-spacing:.2em;opacity:.7">{p.source}</small>
                 </span>
                 <Arrow class="index__arrow" />
               </a>

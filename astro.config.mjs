@@ -7,7 +7,7 @@ export default defineConfig({
   site: 'https://ruchisharma.com',
   output: 'static',
   trailingSlash: 'always',
-  build: { format: 'directory', inlineStylesheets: 'auto' },
+  build: { format: 'directory', inlineStylesheets: 'always' },
   integrations: [sitemap()],
   image: { layout: 'constrained' },
   prefetch: { prefetchAll: false },

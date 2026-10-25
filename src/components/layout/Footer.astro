@@ -1,0 +1,41 @@
+---
+import { nav, site } from '../../data/site';
+const year = new Date().getFullYear();
+---
+
+<footer class="footer">
+  <div class="wrap">
+    <div class="footer__top">
+      <div>
+        <h2>Let’s talk</h2>
+        <a class="link" href={`mailto:${site.email}`} style="font-family:var(--font-display);text-transform:uppercase;font-weight:600;line-height:1.1;font-size:clamp(1.9rem,3.1vw,3.2rem);overflow-wrap:anywhere">
+          {site.email}
+        </a>
+        <p style="margin-top:18px"><a class="link" href={`tel:${site.phoneHref}`}>{site.phone}</a></p>
+      </div>
+      <div>
+        <h2>Pages</h2>
+        <ul>
+          {nav.map((n) => <li><a class="link" href={n.href}>{n.label}</a></li>)}
+        </ul>
+      </div>
+      <div>
+        <h2>Elsewhere</h2>
+        <ul>
+          {
+            site.socials.map((s) => (
+              <li>
+                <a class="link" href={s.href} target="_blank" rel="noopener">{s.label}</a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </div>
+    <div class="footer__bottom">
+      <span>© {year} {site.name}. All rights reserved.</span>
+      <span>Writer / Creative Director / Speaker / Mentor</span>
+      <button class="top-btn" type="button" data-to-top>Back to top ↑</button>
+    </div>
+  </div>
+</footer>

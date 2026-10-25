@@ -1,0 +1,120 @@
+---
+import Base from '../layouts/Base.astro';
+import Arrow from '../components/ui/Arrow.astro';
+import { site, awards, jury, experience, voluntary, skills, recommendations } from '../data/site';
+---
+
+<Base
+  title="Resume"
+  path="/resume/"
+  description="Ruchi Sharma's career: Founder & CCO of HumanSense, previously Creative Chairperson at BBDO, Group CCO at Ogilvy, Creative Director at Saatchi & Saatchi New York and Regional Creative Director at MullenLowe Bangkok."
+>
+  <header class="page-head">
+    <div class="wrap">
+      <p class="eyebrow">Resume</p>
+      <h1 data-split>Thirty<br />years</h1>
+      <p class="lead muted" data-fade>Mumbai, New York, Bangkok, Colombo.</p>
+      <p data-fade style="margin-top:32px">
+        <a class="btn" href={site.cv} target="_blank" rel="noopener">Download CV <Arrow /></a>
+      </p>
+    </div>
+  </header>
+
+  <section class="section--tight border-top">
+    <div class="wrap split">
+      <div class="split__a"><p class="eyebrow">Awards</p></div>
+      <div class="split__b split__b--wide">
+        <p class="statement statement--wide" data-lit>{awards}</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section border-top">
+    <div class="wrap">
+      <p class="eyebrow">Professional experience</p>
+      <h2 class="display-md" data-split style="margin-bottom:clamp(30px,4vw,60px)">The journey</h2>
+      <div class="timeline">
+        {
+          experience.map((e) => (
+            <article class="timeline__row" data-fade>
+              <span class="timeline__period">{e.period}</span>
+              <div>
+                <h3 class="timeline__role">{e.role}</h3>
+                <p class="timeline__org">{e.org} · {e.place}</p>
+              </div>
+              <p class="timeline__sum">{e.summary}</p>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="section border-top">
+    <div class="wrap">
+      <p class="eyebrow">International jury</p>
+      <h2 class="display-md" data-split style="margin-bottom:clamp(30px,4vw,60px)">Judging &amp;<br />speaking</h2>
+      <div class="jury">
+        {
+          jury.map((j) => (
+            <div class="jury__row" data-fade>
+              <span class="jury__year">{j.year}</span>
+              <div>
+                <span class="jury__title">{j.title}</span>
+                {j.note && <span class="jury__note">{j.note}</span>}
+              </div>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="section border-top">
+    <div class="wrap split">
+      <div class="split__a">
+        <p class="eyebrow">Voluntary positions</p>
+        <h2 class="display-md" data-split>Giving back</h2>
+      </div>
+      <div class="split__b">
+        {
+          voluntary.map((v) => (
+            <div class="rec" data-fade>
+              <p class="rec__role">{v.period}</p>
+              <h3>{v.role}</h3>
+              <p class="timeline__org" style="margin-bottom:14px">{v.org}</p>
+              <p>{v.summary}</p>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="section--tight border-top">
+    <div class="wrap">
+      <p class="eyebrow">Skills</p>
+      <ul class="tags" data-fade>
+        {skills.map((s) => <li>{s}</li>)}
+      </ul>
+    </div>
+  </section>
+
+  <section class="section border-top" id="recommendations">
+    <div class="wrap">
+      <p class="eyebrow">Recommendations</p>
+      <h2 class="display-lg" data-split style="margin-bottom:clamp(36px,5vw,80px)">In their<br />words</h2>
+      <div class="recs">
+        {
+          recommendations.map((r) => (
+            <article class="rec" data-fade>
+              <h3>{r.name}</h3>
+              <p class="rec__role">{r.role}</p>
+              {r.quote.map((p) => <p>{p}</p>)}
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+</Base>

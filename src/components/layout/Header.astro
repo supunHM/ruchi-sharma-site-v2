@@ -1,0 +1,88 @@
+---
+import { nav, site } from '../../data/site';
+
+const here = Astro.url.pathname;
+const isCurrent = (href: string) => (href === '/' ? here === '/' : here.startsWith(href));
+const desktop = nav.filter((n) => n.href !== '/');
+---
+
+<header class="header" id="header" data-header>
+  <div class="wrap header__inner">
+    <a href="/" class="logo" aria-label={`${site.name}, home`}>
+      Ruchi Sharma<i aria-hidden="true"></i>
+    </a>
+
+    <nav class="nav-desktop" aria-label="Primary">
+      {
+        desktop.map((n, i) => (
+          <a
+            href={n.href}
+            class:list={['nav-link', { 'nav-cta': i === desktop.length - 1 }]}
+            aria-current={isCurrent(n.href) ? 'page' : undefined}
+          >
+            {n.label}
+          </a>
+        ))
+      }
+    </nav>
+
+    <div class="header__tools">
+      <button class="icon-btn theme-toggle" type="button" data-theme-toggle aria-label="Switch colour theme">
+        <svg class="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"
+          ><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"></path></svg
+        >
+        <svg class="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"
+          ><circle cx="12" cy="12" r="4"></circle><path
+            d="M12 2v2m0 16v2M4.9 4.9l1.4 1.4m11.4 11.4 1.4 1.4M2 12h2m16 0h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"
+          ></path></svg
+        >
+      </button>
+      <button
+        class="burger"
+        type="button"
+        aria-expanded="false"
+        aria-controls="menu"
+        data-menu-toggle
+      >
+        <span data-menu-label>Menu</span>
+        <span class="burger__bars" aria-hidden="true"></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<div class="menu" id="menu" data-menu inert aria-label="Menu">
+  <nav aria-label="Mobile">
+    <ul class="menu__list">
+      {
+        nav.map((n, i) => (
+          <li class="line-mask">
+            <a
+              class="menu__link"
+              data-menu-item
+              href={n.href}
+              aria-current={isCurrent(n.href) ? 'page' : undefined}
+            >
+              <sup>0{i + 1}</sup>
+              {n.label}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </nav>
+  <div class="menu__foot" data-menu-foot>
+    <a href={`mailto:${site.email}`}>{site.email}</a>
+    <ul>
+      {
+        site.socials.map((s) => (
+          <li>
+            <a href={s.href} rel="noopener" target="_blank">
+              {s.label}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</div>

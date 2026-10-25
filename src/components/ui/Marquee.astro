@@ -1,0 +1,23 @@
+---
+interface Props {
+  items: readonly string[];
+  speed?: number;
+  label?: string;
+}
+const { items, speed = 48, label } = Astro.props;
+---
+
+<div class="marquee" style={`--s:${speed}s`} role="group" aria-label={label}>
+  <div class="marquee__track" style={`animation-duration:var(--s)`} aria-hidden={label ? 'true' : undefined}>
+    {
+      [0, 1].map(() => (
+        <div class="marquee__group">
+          {items.map((t, i) => (
+            <span class:list={['marquee__item', { outline: i % 2 === 1 }]}>{t}</span>
+          ))}
+        </div>
+      ))
+    }
+  </div>
+  {label && <p class="sr-only">{items.join(', ')}</p>}
+</div>

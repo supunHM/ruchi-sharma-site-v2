@@ -1,0 +1,15 @@
+---
+import Base from '../layouts/Base.astro';
+import Arrow from '../components/ui/Arrow.astro';
+---
+
+<Base title="Page not found" path="/404/" description="This page could not be found.">
+  <header class="page-head" style="min-height:80svh">
+    <div class="wrap">
+      <p class="eyebrow">404</p>
+      <h1>Lost<br />the plot</h1>
+      <p class="lead muted">The page you’re after doesn’t exist.</p>
+      <p style="margin-top:32px"><a class="btn" href="/">Back home <Arrow /></a></p>
+    </div>
+  </header>
+</Base>

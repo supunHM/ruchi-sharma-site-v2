@@ -1,0 +1,115 @@
+---
+import { Picture } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import Gallery from '../components/gallery/Gallery.astro';
+import Arrow from '../components/ui/Arrow.astro';
+import { bio, places, voluntary, press } from '../data/site';
+import { juryAndStage } from '../data/gallery';
+import portrait from '../assets/images/hero-portrait.jpg';
+---
+
+<Base
+  title="About"
+  path="/about/"
+  description="Ruchi Sharma is an awarded Writer and Creative Director whose leadership across the world's largest agency networks has grown brands in New York, Bangkok, Southeast Asia, India and Sri Lanka."
+>
+  <header class="page-head">
+    <div class="wrap">
+      <p class="eyebrow">About</p>
+      <h1 data-split>Human<br />first</h1>
+    </div>
+  </header>
+
+  <section class="section--tight">
+    <div class="wrap split">
+      <div class="split__a">
+        <div class="frame frame--tall" data-mask>
+          <Picture
+            src={portrait}
+            formats={['avif', 'webp']}
+            widths={[420, 640, 860]}
+            sizes="(min-width: 900px) 38vw, 92vw"
+            alt="Ruchi Sharma in black and white, smiling, with her hand resting under her chin"
+            loading="eager"
+            decoding="async"
+          />
+        </div>
+        <p class="caption"><span>Ruchi Sharma</span><span>Writer / Creative Director</span></p>
+      </div>
+      <div class="split__b">
+        <p class="statement" data-lit>{bio[0]}</p>
+        <div style="margin-top:clamp(28px,4vw,56px)">
+          {bio.slice(1).map((p) => <p class="lead" data-fade style="font-size:clamp(1.05rem,.5vw + .95rem,1.3rem)">{p}</p>)}
+        </div>
+        <ul class="tags" data-fade style="margin-top:34px" aria-label="Places Ruchi has worked">
+          {places.map((p) => <li>{p}</li>)}
+        </ul>
+        <p style="margin-top:clamp(32px,4vw,56px)">
+          <a class="btn" href="/resume/">Resume <Arrow /></a>
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section border-top" style="margin-top:var(--section)">
+    <div class="wrap">
+      <p class="eyebrow">Giving back</p>
+      <h2 class="display-md" data-split style="margin-bottom:clamp(30px,4vw,60px)">Volunteer &amp;<br />advisory</h2>
+      <div class="timeline">
+        {
+          voluntary.map((v) => (
+            <div class="timeline__row" data-fade>
+              <span class="timeline__period">{v.period}</span>
+              <div>
+                <h3 class="timeline__role">{v.role}</h3>
+                <p class="timeline__org">{v.org}</p>
+              </div>
+              <p class="timeline__sum">{v.summary}</p>
+            </div>
+          ))
+        }
+        <div class="timeline__row" data-fade>
+          <span class="timeline__period">Advisory boards</span>
+          <div>
+            <h3 class="timeline__role">Industry councils</h3>
+            <p class="timeline__org">D&amp;AD · New York Festival · AME · FPA Sri Lanka</p>
+          </div>
+          <p class="timeline__sum">
+            Member of the D&amp;AD Impact Council, and an advisory board member of the New York Festival, the American
+            Marketing Awards and the Family Planning Association of Sri Lanka.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section border-top">
+    <div class="wrap">
+      <p class="eyebrow">Career highlights</p>
+      <h2 class="display-md" data-split style="margin-bottom:clamp(30px,4vw,60px)">Jury, stage<br />&amp; press</h2>
+      <Gallery items={juryAndStage} />
+    </div>
+  </section>
+
+  <section class="section border-top">
+    <div class="wrap">
+      <p class="eyebrow">Articles &amp; interviews</p>
+      <ul class="index">
+        {
+          press.map((p, i) => (
+            <li data-fade>
+              <a class="index__row" href={p.href} target="_blank" rel="noopener">
+                <span class="index__num">{String(i + 1).padStart(2, '0')}</span>
+                <span class="index__name" style="font-size:clamp(1.6rem,3.6vw,3.6rem)">
+                  {p.title}
+                  <small style="display:block;margin-top:6px;font:500 .72rem/1 var(--font-body);letter-spacing:.2em;opacity:.7">{p.source}</small>
+                </span>
+                <Arrow class="index__arrow" />
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+</Base>

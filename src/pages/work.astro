@@ -1,0 +1,38 @@
+---
+import Base from '../layouts/Base.astro';
+import WorkIndex from '../components/sections/WorkIndex.astro';
+import Marquee from '../components/ui/Marquee.astro';
+import { awardsMarquee, awards } from '../data/site';
+---
+
+<Base
+  title="Work"
+  path="/work/"
+  description="Brands and causes Ruchi Sharma has led creative for, from Head & Shoulders and Fonterra to the United Nations and UNHCR."
+>
+  <header class="page-head">
+    <div class="wrap">
+      <p class="eyebrow">Work</p>
+      <h1 data-split>Brands<br />&amp; causes</h1>
+      <p class="lead muted" data-fade>
+        Fifteen brands and causes, from Unilever and P&amp;G categories to the United Nations. Case studies currently
+        live on the existing site.
+      </p>
+    </div>
+  </header>
+
+  <section class="wrap" style="padding-bottom:var(--section)">
+    <WorkIndex />
+  </section>
+
+  <Marquee items={awardsMarquee} label="Recognised by" speed={55} />
+
+  <section class="section">
+    <div class="wrap split">
+      <div class="split__a"><p class="eyebrow">Recognition</p></div>
+      <div class="split__b split__b--wide">
+        <p class="statement statement--wide" data-lit>{awards}</p>
+      </div>
+    </div>
+  </section>
+</Base>

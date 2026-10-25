@@ -1,0 +1,83 @@
+---
+import Base from '../layouts/Base.astro';
+import Arrow from '../components/ui/Arrow.astro';
+import { site } from '../data/site';
+---
+
+<Base
+  title="Let’s Talk"
+  path="/contact/"
+  description="Get in touch with Ruchi Sharma — Writer, Creative Director, Speaker and Mentor, based in Colombo, Sri Lanka."
+>
+  <header class="page-head">
+    <div class="wrap">
+      <p class="eyebrow">Contact</p>
+      <h1 data-split>Let’s<br />talk</h1>
+    </div>
+  </header>
+
+  <section class="wrap split" style="padding-bottom:var(--section)">
+    <div class="split__a split__a--form">
+      <form
+        class="form"
+        data-contact-form
+        data-fallback={site.email}
+        action="/api/contact"
+        method="post"
+        novalidate
+      >
+        <div class="field">
+          <label for="f-name">Name</label>
+          <input id="f-name" name="name" type="text" autocomplete="name" required maxlength="120" />
+        </div>
+        <div class="field">
+          <label for="f-email">Email</label>
+          <input id="f-email" name="email" type="email" autocomplete="email" required maxlength="200" />
+        </div>
+        <div class="field">
+          <label for="f-message">Message</label>
+          <textarea id="f-message" name="message" required maxlength="5000"></textarea>
+        </div>
+        <div class="field field--hp" aria-hidden="true">
+          <label for="f-site">Leave this empty</label>
+          <input id="f-site" name="website" type="text" tabindex="-1" autocomplete="off" />
+        </div>
+        <div>
+          <button class="btn" type="submit">Send <Arrow /></button>
+        </div>
+        <p class="form__status" role="status" aria-live="polite" data-form-status></p>
+      </form>
+    </div>
+
+    <div class="split__b split__b--side">
+      <dl class="contact-list">
+        <div data-fade>
+          <dt>Email</dt>
+          <dd><a class="link" href={`mailto:${site.email}`}>{site.email}</a></dd>
+        </div>
+        <div data-fade>
+          <dt>Phone</dt>
+          <dd><a class="link" href={`tel:${site.phoneHref}`}>{site.phone}</a></dd>
+        </div>
+        <div data-fade>
+          <dt>Based in</dt>
+          <dd>Colombo, Sri Lanka</dd>
+        </div>
+        <div data-fade>
+          <dt>Elsewhere</dt>
+          <dd>
+            <ul>
+              {
+                site.socials.map((s) => (
+                  <li>
+                    <a class="link" href={s.href} target="_blank" rel="noopener">{s.label}</a>
+                  </li>
+                ))
+              }
+            </ul>
+          </dd>
+        </div>
+      </dl>
+    </div>
+  </section>
+</Base>

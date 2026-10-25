@@ -1,0 +1,30 @@
+---
+import Arrow from '../ui/Arrow.astro';
+import { clients } from '../../data/site';
+
+interface Props {
+  limit?: number;
+}
+const { limit } = Astro.props;
+const list = limit ? clients.slice(0, limit) : clients;
+---
+
+<ul class="index">
+  {
+    list.map((c, i) => (
+      <li data-fade>
+        <a
+          class="index__row"
+          href={c.href}
+          target="_blank"
+          rel="noopener"
+          aria-label={`${c.name} — view on the current site (opens in a new tab)`}
+        >
+          <span class="index__num">{String(i + 1).padStart(2, '0')}</span>
+          <span class="index__name">{c.name}</span>
+          <Arrow class="index__arrow" />
+        </a>
+      </li>
+    ))
+  }
+</ul>
